@@ -1,5 +1,7 @@
 import React from "react";
 import contactsInitialState from "../../data/contacts";
+import "../../store";
+
 function Contacts(){
     return(
        <div className="container">
