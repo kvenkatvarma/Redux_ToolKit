@@ -37,3 +37,4 @@ let contactsInitialState =[
         phone:"8788878"
     }
 ];
+export default contactsInitialState;
