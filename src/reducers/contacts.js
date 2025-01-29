@@ -9,3 +9,5 @@ let contactsReducer ={
      state.splice(index,1);
    }
 };
+
+export default contactsReducer;
