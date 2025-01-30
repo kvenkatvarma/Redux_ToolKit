@@ -1,4 +1,4 @@
-import { fetchContactsThunk } from "../thunks/contacts";
+import { createContactsThunk, deleteContactsThunk, fetchContactsThunk, updateContactsThunk } from "../thunks/contacts";
 
 let contactsReducer ={
    add:(state,action)=>{
@@ -24,7 +24,7 @@ let contactsReducer ={
 export let contactsExtraReducer ={
 [fetchContactsThunk.pending]:(state,action)=>{
     state.data = [];
-    state,status = action.meta.requestStatus;
+    state.status = action.meta.requestStatus;
     state.error = [];
 },
 
@@ -37,7 +37,62 @@ export let contactsExtraReducer ={
     state.data = [];
     state.status = action.meta.requestStatus;
     state.error = action.error;
-}
+},
+
+[createContactsThunk.pending]:(state,action)=>{
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[createContactsThunk.fulfilled]:(state,action)=>{
+    state.data.push(action.payload);
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[createContactsThunk.rejected]:(state,action)=>{
+   
+    state.status = action.meta.requestStatus;
+    state.error = action.error;
+},
+
+
+[updateContactsThunk.pending]:(state,action)=>{
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[updateContactsThunk.fulfilled]:(state,action)=>{
+    let index = state.data.findIndex(contact=>contact.id == action.payload.id);
+    state.data[index].firstName = action.payload.firstName;
+    state.data[index].lastName = action.payload.lastName;
+    state.data[index].email = action.payload.email;
+    state.data[index].phone = action.payload.phone;
+
+    
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[updateContactsThunk.rejected]:(state,action)=>{
+   
+    state.status = action.meta.requestStatus;
+    state.error = action.error;
+},
+
+
+[deleteContactsThunk.pending]:(state,action)=>{
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[deleteContactsThunk.fulfilled]:(state,action)=>{
+    let index = state.data.findIndex(contact=>contact.id == action.payload);
+   state.data.splice(index,1);
+    
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[deleteContactsThunk.rejected]:(state,action)=>{
+   
+    state.status = action.meta.requestStatus;
+    state.error = action.error;
+},
 
 };
 

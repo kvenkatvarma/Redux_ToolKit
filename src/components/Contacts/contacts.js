@@ -1,9 +1,8 @@
 import React,{useState,useEffect} from "react";
 import "../../store";
 import { useSelector,useDispatch } from "react-redux";
-import {add,remove,update} from "../../slices/contacts";
 import { v1 as uuid } from "uuid";
-import { fetchContactsThunk } from "../../thunks/contacts";
+import { fetchContactsThunk,createContactsThunk,updateContactsThunk,deleteContactsThunk } from "../../thunks/contacts";
 
 function Contacts(){
 
@@ -26,7 +25,7 @@ function Contacts(){
    },[dispatch])
    let contacts = useSelector(state=>state.contacts);
    let onAddClick=()=>{
-        dispatch(add({
+        dispatch(createContactsThunk({
              id: uuid(),
              firstName:firstName,
              lastName:lastName,
@@ -40,7 +39,7 @@ function Contacts(){
    let onDeleteClick =(contact)=>{
          if(window.confirm("Are you sure to delete this contact?"))
          {
-            dispatch(remove(contact.id));
+            dispatch(deleteContactsThunk(contact.id));
          }
    };
    let onEditClick =(contact)=>{
@@ -53,7 +52,7 @@ function Contacts(){
    };
 
    let onUpdateClick =()=>{
-       dispatch(update({
+       dispatch(updateContactsThunk({
          id:editId,
          firstName:editfirstName,
          lastName:editlastName,
