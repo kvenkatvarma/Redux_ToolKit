@@ -8,4 +8,5 @@ var contactsSlice = createSlice({
     reducers:contactsReducer
 });
 
+export const {add,remove,update} = contactsSlice.actions;
 export default contactsSlice;

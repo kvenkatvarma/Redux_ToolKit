@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import "../../store";
 import { useSelector,useDispatch } from "react-redux";
-import contactsSlice from "../../slices/contacts";
+import {add,remove,update} from "../../slices/contacts";
 import { v1 as uuid } from "uuid";
 
 function Contacts(){
@@ -12,9 +12,15 @@ function Contacts(){
    let [email,setEmail] =useState("");
    let [phone,setPhone] =useState("");
 
+   let [editId,setEditId] = useState("");
+   let [editfirstName,setEditFirstName] =useState("");
+   let [editlastName,setEditLastName] =useState("");
+   let [editemail,setEditEmail] =useState("");
+   let [editphone,setEditPhone] =useState("");
+
    let dispatch = useDispatch();
    let onAddClick=()=>{
-        dispatch(contactsSlice.actions.add({
+        dispatch(add({
              id: uuid(),
              firstName:firstName,
              lastName:lastName,
@@ -28,10 +34,28 @@ function Contacts(){
    let onDeleteClick =(contact)=>{
          if(window.confirm("Are you sure to delete this contact?"))
          {
-            dispatch(contactsSlice.actions.remove(contact.id));
+            dispatch(remove(contact.id));
          }
    };
+   let onEditClick =(contact)=>{
+     setEditId(contact.id);
+     setEditFirstName(contact.firstName);
+     setEditLastName(contact.lastName);
+     setEditEmail(contact.email);
+     setEditPhone(contact.phone);
 
+   };
+
+   let onUpdateClick =()=>{
+       dispatch(update({
+         id:editId,
+         firstName:editfirstName,
+         lastName:editlastName,
+         email:editemail,
+         phone:editphone
+       }));
+       setEditId("");
+   };
     return(
        <div className="container">
           <h4 className="grid-header">
@@ -77,11 +101,37 @@ function Contacts(){
                      {contacts.map((contact,index)=>
                     <tr key={contact.id}>
                         <td>{index +1} </td>
-                        <td>{contact.firstName} </td>
-                        <td>{contact.lastName} </td>
-                        <td>{contact.email} </td>
-                        <td>{contact.phone} </td>
                         <td>
+                            {editId == contact.id ? <input type="text" placeholder="First Name" className="form-control" value={editfirstName} onChange={(event)=>{
+                                setEditFirstName(event.target.value);
+                            }}></input>:<span>{contact.firstName}</span>}
+                            
+                        </td>
+                        <td>
+                            {editId == contact.id ? <input type="text" placeholder="Last Name" className="form-control" value={editlastName} onChange={(event)=>{
+                                setEditLastName(event.target.value);
+                            }}></input>:<span>{contact.lastName}</span>}
+                            
+                        </td>
+                        <td>
+                            {editId == contact.id ? <input type="text" placeholder="Email" className="form-control" value={editemail} onChange={(event)=>{
+                                setEditEmail(event.target.value);
+                            }}></input>:<span>{contact.email}</span>}
+                            
+                        </td>
+                        <td>
+                            {editId == contact.id ? <input type="text" placeholder="Phone" className="form-control" value={editphone} onChange={(event)=>{
+                                setEditPhone(event.target.value);
+                            }}></input>:<span>{contact.phone}</span>}
+                            
+                        </td>
+                        <td>
+                        {editId == contact.id ? <button className="button button-green" onClick={()=>{
+                                onUpdateClick();
+                            }}>Update</button>:    <button className="button button-green" onClick={()=>{
+                                onEditClick(contact);
+                            }}>Edit</button>}
+                     
                             <button className="button button-red" onClick={()=>{
                                 onDeleteClick(contact);
                             }}>Delete</button>
