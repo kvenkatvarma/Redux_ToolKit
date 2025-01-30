@@ -1,3 +1,5 @@
+import { fetchContactsThunk } from "../thunks/contacts";
+
 let contactsReducer ={
    add:(state,action)=>{
        state.push(action.payload);
@@ -17,6 +19,26 @@ let contactsReducer ={
     state[index].phone = action.payload.phone;
 
    },
+};
+
+export let contactsExtraReducer ={
+[fetchContactsThunk.pending]:(state,action)=>{
+    state.data = [];
+    state,status = action.meta.requestStatus;
+    state.error = [];
+},
+
+[fetchContactsThunk.fulfilled]:(state,action)=>{
+    state.data = action.payload;
+    state.status = action.meta.requestStatus;
+    state.error = [];
+},
+[fetchContactsThunk.rejected]:(state,action)=>{
+    state.data = [];
+    state.status = action.meta.requestStatus;
+    state.error = action.error;
+}
+
 };
 
 export default contactsReducer;

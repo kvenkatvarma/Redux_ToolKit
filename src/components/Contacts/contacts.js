@@ -1,12 +1,13 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import "../../store";
 import { useSelector,useDispatch } from "react-redux";
 import {add,remove,update} from "../../slices/contacts";
 import { v1 as uuid } from "uuid";
+import { fetchContactsThunk } from "../../thunks/contacts";
 
 function Contacts(){
 
-   let contacts = useSelector(state=>state.contacts);
+  
    let [firstName,setFirstName] =useState("");
    let [lastName,setLastName] =useState("");
    let [email,setEmail] =useState("");
@@ -19,6 +20,11 @@ function Contacts(){
    let [editphone,setEditPhone] =useState("");
 
    let dispatch = useDispatch();
+
+   useEffect(()=>{
+       dispatch(fetchContactsThunk());
+   },[dispatch])
+   let contacts = useSelector(state=>state.contacts);
    let onAddClick=()=>{
         dispatch(add({
              id: uuid(),
@@ -60,6 +66,9 @@ function Contacts(){
        <div className="container">
           <h4 className="grid-header">
              Contacts
+             {contacts.status == 'pending' ? <i className="fas fa-spinner fa-spin"></i> : ""}
+             <span className="text-red">{contacts.error?.message};
+             </span>
             </h4>  
             <div className="box">
                <details>
@@ -98,7 +107,7 @@ function Contacts(){
                     </tr>
                  </thead>
                    <tbody>
-                     {contacts.map((contact,index)=>
+                     {contacts.data.map((contact,index)=>
                     <tr key={contact.id}>
                         <td>{index +1} </td>
                         <td>
